@@ -263,7 +263,7 @@ dv_full_display_widget::dv_full_display_widget()
       dest_width_(767), dest_height_(576),
       sel_enabled_(false),
       sel_in_progress_(false),
-      highlight_title_safe_area_(true)
+      highlight_title_safe_area_(false)
 {
     std::memset(&source_region_, 0, sizeof(source_region_));
     std::memset(&selection_, 0, sizeof(selection_));
