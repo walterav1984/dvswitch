@@ -22,8 +22,8 @@ void video_effect_show_title_safe(struct raw_frame_ref dest)
 
     unsigned width = FRAME_WIDTH;
     unsigned height = dest.height;
-    unsigned border_horiz = (FRAME_WIDTH + 5) / 10;
-    unsigned border_vert = (dest.height + 5) / 10;
+    unsigned border_horiz = 0;
+    unsigned border_vert = 72;
     unsigned bias = luma_bias;
 
     // Darken the non-title-safe area
