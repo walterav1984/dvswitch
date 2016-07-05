@@ -773,6 +773,51 @@ struct dv_thumb_display_widget::raw_frame_thumb
     ~raw_frame_thumb() { av_frame_dealloc(header); };
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 dv_thumb_display_widget::dv_thumb_display_widget()
     : dv_display_widget(dv_block_size_log2),
       raw_frame_(new raw_frame_thumb),

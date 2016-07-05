@@ -104,6 +104,10 @@ private:
     rectangle selection_;
 };
 
+
+
+
+
 class dv_thumb_display_widget : public dv_display_widget
 {
 public:
