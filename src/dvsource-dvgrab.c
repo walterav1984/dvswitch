@@ -26,6 +26,7 @@ static struct option options[] = {
     {"host",     1, NULL, 'h'},
     {"port",     1, NULL, 'p'},
     {"tally",    0, NULL, 't'},
+    {"filename", 0, NULL, 'n'},
     {"verbose",  0, NULL, 'v'},
     {"help",     0, NULL, 'H'},
     {NULL,       0, NULL, 0}
@@ -46,6 +47,7 @@ static char * firewire_guid = NULL;
 static char * mixer_host = NULL;
 static char * mixer_port = NULL;
 static int do_tally = 0;
+static char * filename = NULL;
 static int verbose = 0;
 
 static enum mode program_mode(const char * progname)
@@ -91,6 +93,11 @@ static void handle_config(const char * name, const char * value)
 	free(mixer_port);
 	mixer_port = strdup(value);
     }
+    else if (strcmp(name, "SOURCE_FILENAME") == 0)
+    {
+	free(filename);
+	filename = strdup(value);
+    }
 }
 
 static void usage(const char * progname)
@@ -99,7 +106,7 @@ static void usage(const char * progname)
 	"[-c CARD-NUMBER | DEVICE] [-g GUID]";
     static const char v4l2_args[] = "[DEVICE]";
     static const char other_args[] =
-	"[-t] [-v] [-h HOST] [-p PORT]";
+	"[-t] [-v] [-n FILENAME] [-h HOST] [-p PORT]";
 
     switch (program_mode(progname))
     {
@@ -186,7 +193,7 @@ int main(int argc, char ** argv)
     /* Parse arguments. */
 
     int opt;
-    while ((opt = getopt_long(argc, argv, "c:g:h:p:tv", options, NULL)) != -1)
+    while ((opt = getopt_long(argc, argv, "c:g:h:p:n:tv", options, NULL)) != -1)
     {
 	switch (opt)
 	{
@@ -215,6 +222,10 @@ int main(int argc, char ** argv)
 	case 't':
 	    do_tally = 1;
 	    break;
+	case 'n':
+           free(filename);
+           filename = strdup(optarg);
+           break;
 	case 'v':
 	    verbose = 1;
 	    break;
@@ -301,7 +312,7 @@ int main(int argc, char ** argv)
 
     /* Run dvgrab with the socket as stdout. */
 
-    char * dvgrab_argv[13];
+    char * dvgrab_argv[16];
     char ** argp = dvgrab_argv;
     if (mode <= mode_dvgrab_max)
     {
@@ -324,6 +335,14 @@ int main(int argc, char ** argv)
 	    *argp++ = firewire_guid;
 	}
 	*argp++ = "-noavc";
+	if (filename)
+	{
+	// Don't split files
+	*argp++ = "-s";
+	*argp++ = "0";
+	*argp++ = "-timesys";
+	*argp++ = filename;
+	}
 	*argp++ = "-";
     } else {
 	assert(mode == mode_v4l2_raw);
