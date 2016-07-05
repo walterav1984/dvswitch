@@ -26,12 +26,12 @@ const struct dv_system dv_system_625_50 =
     .common_name = "pal",
     .frame_width = 720,
     .frame_height = 576,
-    .active_region = { .left = 9, .top = 0, .right = 711, .bottom = 576 },
+    .active_region = { .left = 0, .top = 0, .right = 720, .bottom = 576 },
     .frame_rate_numer = 25,
     .frame_rate_denom = 1,
     .pixel_aspect = {
-	[dv_frame_aspect_normal] = { .width =  59, .height = 54 },
-	[dv_frame_aspect_wide] =   { .width = 118, .height = 81 }
+	[dv_frame_aspect_normal] = { .width =  16, .height = 15 },
+	[dv_frame_aspect_wide] =   { .width =  64, .height = 45 }
     },
     .seq_count = 12,
     .size = 12 * DIF_SEQUENCE_SIZE,
