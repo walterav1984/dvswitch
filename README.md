@@ -18,7 +18,10 @@ mkdir -p mybuilds/dvswitch/build
 cd mybuilds/dvswitch/build
 cmake ../../../dvswitch
 make
-sudo make install #or copy *.png ../data/ icons  to /usr/local/share/dvswitch/ yourself and run from ./dvswitch from src/
+sudo make install 
+dvswitch -p 1234 -h 127.0.0.1 #run global command available after install
+#or copy *.png  icons from dvswitch/data/ folder to /usr/local/share/dvswitch/ 
+#and run binaries from compiled src/ ./dv*
 ```
 ###Fix ubuntu 16.04 firewire sudo permissions /dev/fw* for "ancient" DV devices
 
@@ -52,7 +55,7 @@ sudo nano /lib/udev/rules.d/70-uaccess.rules
 - [x] ~~https://github.com/jnweiger/dvswitch/commit/95838c05470adf363fee02af7fb791df075255f1  #title safe default off~~
 - [x] ~~myself dif.c                                                                        #show full D1 720 pixels vs 702/704 "active"~~
 - [x] ~~http://lists.alioth.debian.org/pipermail/dvswitch-devel/2011-August/000480.html       #save independent source streams~~
-- [ ] https://github.com/jnweiger/dvswitch/commit/b0eff96d68fafaa3704426c5d4ff3c0391b921ef  #icon for lost sources
+- [x] ~~https://github.com/jnweiger/dvswitch/commit/b0eff96d68fafaa3704426c5d4ff3c0391b921ef  #icon for lost sources~~
 - [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
 - [x] ~~myself ?                                                                              #crop titlesafe 16/9 for 4/3 camera~~
 - [ ] myself ?                                                                              #limit warning/error message flood console
