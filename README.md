@@ -59,6 +59,9 @@ sudo nano /lib/udev/rules.d/70-uaccess.rules
 - [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
 - [x] ~~myself ?                                                                              #crop titlesafe 16/9 for 4/3 camera~~
 - [ ] myself ?                                                                              #limit warning/error message flood console
+- [ ] Carl K.complete dvsource-file patch with manual/doc 
+- [ ] myself remove sources from settings menu
+- [ ] myself change GUI naming to match keyboard shortcut keys!
   
 * check all these instructions I've written down!
 
