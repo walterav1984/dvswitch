@@ -7,7 +7,7 @@ Warning This Page/Project is evolving, things can break/change/damage without no
 
 ##Compile and Run on ubuntu 16.04
 
-Based on ubuntu 16.04 mini.iso install with tasksel "Ubuntu MATE minimal installation + openssh-server + other system defaults tasksel package (don't know name anymore)"
+Based on ubuntu 16.04 mini.iso install with tasksel "standard system utilities + Ubuntu MATE minimal installation + OpenSSH-server"
 
 ```
 sudo apt-get install dvgrab ffmpeg cmake build-essential libboost-thread-dev libgtkmm-2.4-dev libavcodec-dev libavutil-dev libasound2-dev libxv-dev libjack-jackd2-dev liblo-dev git
@@ -18,10 +18,14 @@ mkdir -p mybuilds/dvswitch/build
 cd mybuilds/dvswitch/build
 cmake ../../../dvswitch
 make
-sudo make install 
-dvswitch -p 1234 -h 127.0.0.1 #run global command available after install
-#or copy *.png  icons from dvswitch/data/ folder to /usr/local/share/dvswitch/ 
-#and run binaries from compiled src/ ./dv*
+cd src
+./dvswitch -p 1234 -h 127.0.0.1 #see error missing icons!
+sudo mkdir /usr/local/share/dvswitch
+sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/
+./dvswitch -p 1234 -h 127.0.0.1 #now it works!!!
+
+or do "sudo make install" and dvswitch gets install with icons and related tools and can be run global!
+
 ```
 ###Fix ubuntu 16.04 firewire sudo permissions /dev/fw* for "ancient" DV devices
 
