@@ -66,8 +66,8 @@ mixer_window::mixer_window(mixer & mixer)
       quit_menu_item_(Gtk::StockID("gtk-quit")),
       settings_menu_item_(gettext("_Settings"), true),
       format_menu_item_(gettext("_Format"), true),
-      sources_menu_item_(gettext("_Sources"), true),
-      safe_area_menu_item_(gettext("_Highlight safe area"), true),
+      sources_menu_item_(gettext("_Sources"), false),
+      safe_area_menu_item_(gettext("_Widescreen Matte 4:3 Camera"), true),
       fullscreen_menu_item_(gettext("Fu_ll screen"), true),
       status_bar_menu_item_(gettext("Status _Bar"), true),
       status_bar_radio_grp(),
@@ -109,10 +109,10 @@ mixer_window::mixer_window(mixer & mixer)
     // gettexted strings, and the same stock labels; the look will be
     // the same, but now the shortcut can be overridden for localized
     // variants.
-    record_button_.set_label(gettext("_Record"));
+    record_button_.set_label(gettext("(_r)ecord"));
     record_button_.set_use_underline();
     record_button_.set_image(record_icon_);
-    cut_button_.set_label(gettext("Cu_t"));
+    cut_button_.set_label(gettext("Cu(_t)"));
     cut_button_.set_use_underline();
     cut_button_.set_image(cut_icon_);
     apply_button_.set_label(gettext("_Apply"));
@@ -147,8 +147,7 @@ mixer_window::mixer_window(mixer & mixer)
     	sigc::mem_fun(this, &mixer_window::toggle_fullscreen));
     fullscreen_menu_item_.show();
     fullscreen_menu_item_.set_active(false);
-
-    settings_menu_.add(sources_menu_item_);
+    
     settings_menu_.add(format_menu_item_);
     settings_menu_.add(safe_area_menu_item_);
     settings_menu_.add(fullscreen_menu_item_);
