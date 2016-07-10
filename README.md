@@ -1,21 +1,23 @@
 Warning This Page/Project is evolving, things can break/change/damage without notice!
 
 #dvswitch
-* fork of commit 1d73d4a which compiles and runs on ubuntu 16.04 i686/amd64(tested)
+* live PAL/NTSC VideoMixer (network orientated) for DV file(s)/stream(s) originating from local FireWire/iLink devices like camera's, recorders or even remote ones on the network/internet.
+
+* fork of commit 1d73d4a which compiles and runs on ubuntu 16.04 i686/amd64(both tested)
 * reason 2015 mailinglist activity shows the dvswitch project is dead and removed from current ubuntu/debian repositories!
 * attempt to continue/add missing "half-assed" features to this beautifull robust software package that honours field interlacing!
 
 ##Compile and Run on ubuntu 16.04
 
-Based on ubuntu 16.04 mini.iso install with tasksel "standard system utilities + Ubuntu MATE minimal installation + OpenSSH-server"
+Based on ubuntu 16.04 mini.iso install with tasksel "standard system utilities + Ubuntu MATE minimal installation + OpenSSH-server":
 
 ```
 sudo apt-get install dvgrab ffmpeg cmake build-essential libboost-thread-dev libgtkmm-2.4-dev libavcodec-dev libavutil-dev libasound2-dev libxv-dev libjack-jackd2-dev liblo-dev git
 mkdir mygitprojects
 cd mygitprojects
 git clone https://github.com/walterav1984/dvswitch.git
-mkdir -p mybuilds/dvswitch/build
-cd mybuilds/dvswitch/build
+mkdir -p mybuilds/dvswitch/build1
+cd mybuilds/dvswitch/build1
 cmake ../../../dvswitch
 make
 cd src
@@ -24,7 +26,7 @@ sudo mkdir /usr/local/share/dvswitch
 sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/
 ./dvswitch -p 1234 -h 127.0.0.1 #now it works!!!
 
-or do "sudo make install" and dvswitch gets install with icons and related tools and can be run global!
+or do "sudo make install" and dvswitch gets installed with icons and related tools and can be run global!
 
 ```
 ###Fix ubuntu 16.04 firewire sudo permissions /dev/fw* for "ancient" DV devices
@@ -52,22 +54,24 @@ sudo nano /lib/udev/rules.d/70-uaccess.rules
 ```
 
 ##TODO
-* create list of usefull/stable patches and commit them accordingly by git(hub) rules:
-
 - [x] ~~https://github.com/yoe/dvswitch/commit/79b63feef6f7a27c2f962d5a7efffa4f9d657f57       #fix memleak dvsink-file~~
 - [x] ~~https://github.com/jnweiger/dvswitch/commit/82355bfd0861dd4553899a460b8b415ec86b2e3b  #mouse clickable preview thumbs~~
 - [x] ~~https://github.com/jnweiger/dvswitch/commit/95838c05470adf363fee02af7fb791df075255f1  #title safe default off~~
 - [x] ~~myself dif.c                                                                        #show full D1 720 pixels vs 702/704 "active"~~
 - [x] ~~http://lists.alioth.debian.org/pipermail/dvswitch-devel/2011-August/000480.html       #save independent source streams~~
 - [x] ~~https://github.com/jnweiger/dvswitch/commit/b0eff96d68fafaa3704426c5d4ff3c0391b921ef  #icon for lost sources~~
-- [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
 - [x] ~~myself ?                                                                              #crop titlesafe 16/9 for 4/3 camera~~
+- [x] ~~https://github.com/yoe/dvswitch/commit/26d1c37a90a64362fe4afa08057331ba10c06eb0	    #highres color thumbnails ~~
+- [x] ~~myself remove sources from settings menu~~
+- [x] ~~myself change GUI naming to match keyboard shortcut keys!~~
+- [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
 - [ ] myself ?                                                                              #limit warning/error message flood console
-- [ ] Carl K.complete dvsource-file patch with manual/doc 
-- [ ] myself remove sources from settings menu
-- [ ] myself change GUI naming to match keyboard shortcut keys!
-  
-* check all these instructions I've written down!
+- [ ] myself complete dvsource-file patch with manual/doc by Carl K. 
+- [?] Why dvsource-file n parameter has worse performance than dirty tee pipe script contact Carl K.?
+
+##TODO hard?
+- [ ] automate/link "dvpause project" start/play button with source selection (keyboard press) in dvswitch?
+- [ ] integrate watermark/tga/png overlay (multiple slots) or use MLT? 
 
 * example scripts of all great dv/firewire related tools
 
@@ -92,7 +96,7 @@ make run #Change -p port -h host in the Makefile
 TODO commit patches to dvpause for autogenerating playlist based on folder content!
 ```
   
-* test-dv (sent raw dv video from PC back to FireWire recorder/monitor with for instance SDI/HDMI interfaces)  
+* test-dv (sent raw dv video from PC back to FireWire/iLink recorder/camera with for instance S-video/SDI/HDMI interfaces)  
   https://www.kernel.org/pub/linux/libs/ieee1394/libiec61883-1.2.0.tar.gz
 ```
 To compile on ubuntu 16.04
@@ -101,12 +105,24 @@ sudo apt-get install libraw1394-dev libiec61883-dev libdv-bin
 make
 cd examples
 ./test-dv filename-raw-video.dv
+dvsink-command ./test-dv - . #pipes dvswitch mixer output to firewire device!
 ```
 
 * ffmpeg
   see repository
+```
+TODO add examples howto
+*convert from any videotype to a raw.DV movie file that can be mixed in dvswitch with dvpause
+*stream to youtube
+```
 
 * mlt/melt
   see repository
   or "shotcut" for newest included melt builds https://www.shotcut.org/
   https://www.mltframework.org/
+```
+TODO add examples howto
+*add overlay png/tga watermark
+*dvsink-command pipe Decklink SDI output
+*fix chroma upsameling error artifacts 420p 422p
+```
