@@ -27,7 +27,10 @@ sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/
 ./dvswitch -p 1234 -h 127.0.0.1 #Main Process
 
 ./dvsource-dvgrab --firewire -p 1234 -h 127.0.0.1 #Sub Process connects 'some/single' DV iLink/FireWire to dvswitch
-./dvsource-dvgrab --firewire -g typeguidcodehere -p 1234 -h 127.0.0.1 #Sub Process connects specific DV device to dvswitch
+./dvsource-dvgrab --firewire -g typeGUIDcodehere -p 1234 -h 127.0.0.1 #Sub Process connects specific DV device to dvswitch
+
+#What is typeGUIDcodehere? DV devices have unique codes that help identify same type/models so you can choose a specific
+#camera to be the first or the third device in your video mixer. To find GUID codes, use terminal and type:dmesg | grep "GUID"
 
 ./dvsource-file -p 1234 -h 127.0.0.1 -l  ~/mygitprojects/dvswitch/tests/test1.dv #Sub Process -l loops file for continues playback in dvswitch 
 
@@ -79,12 +82,13 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 - [x] ~~myself change GUI naming to match keyboard shortcut keys!~~
 - [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
 - [ ] myself ?                                                                              #limit warning/error message flood console
-- [ ] myself complete dvsource-file patch with manual/doc by Carl K. 
-- [?] Why dvsource-file '-n' parameter has worse performance than dirty tee pipe script contact Carl K.?
+- [ ] myself complete dvsource-file patch with manual/doc by CarlFK. 
+- [ ] Why dvsource-file '-n' parameter has worse performance than dirty tee pipe script contact CarlFK.?
+- [ ] Write user friendly instruction/step/debug plan instead of minimal steps for developers.
 
 ##TODO hard?
 - [ ] automate/link "dvpause project" start/play button with source selection (keyboard press) in dvswitch?
-- [ ] integrate watermark/tga/png overlay (multiple slots) or use MLT? 
+- [ ] integrate watermark/tga/png overlay (multiple slots) or use MLT at the end? 
 
 * example scripts of all great dv/firewire related tools / pipe-constructions
 ```
@@ -92,8 +96,8 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 dvsink-command -p 1234 -h 127.0.0.1 'dvsource-file - -p remoteport -h remotehost' 
 
 #record individual sources instead of dvswitch single mix output!
-dvgrab -noavc -g typeguidcamera1 - | tee >(dvsource-dvgrab --firewire - -p 1234 -h 127.0.0.1) >(~/Desktop/camera1fileoutput.dv) > /dev/null
-dvgrab -noavc -g typeguidcamera2 - | tee >(dvsource-dvgrab --firewire - -p 1234 -h 127.0.0.1) >(~/Desktop/camera1fileoutput.dv) > /dev/null
+dvgrab -noavc -g typeGUIDcamera1 - | tee >(dvsource-dvgrab --firewire - -p 1234 -h 127.0.0.1) >(~/Desktop/camera1fileoutput.dv) > /dev/null
+dvgrab -noavc -g typeGUIDcamera2 - | tee >(dvsource-dvgrab --firewire - -p 1234 -h 127.0.0.1) >(~/Desktop/camera2fileoutput.dv) > /dev/null
 ```
 
 * some firewire debug hints "lspci / kernel modules / dmesg / IRQ interrupts sharing / etc"
@@ -108,27 +112,27 @@ lsmod | egrep "IEEE|Ieee|ieee|1394|Fire|FIRE|fire|OHCI|Ohci|ohci|RAW|Raw|raw"
 dmesg | grep GUID #s400 are probably the pci(-e) chipsets itself, dv/hdv devices are probably s100
 
 #list GUID of connected FireWire devices excluding the adapter(s) itself
-dmesg | grep GUID | egrep -v "puts400guidhere|puts400guidhere|etc" #  
+dmesg | grep GUID | egrep -v "puts400GUIDhere|puts400GUIDhere|etc" #  
 
 #show IRQ / interrupts of FireWire pci(-e) adapters or shared devices using the same interupt
 cat /proc/interrupts | egrep "firewire|ohci"
 ```
 
-##Other Usefull DV related tools
+##Other important DV related tools
 * dvgrab (easy cli capture util for dv/hdv firewire sources)
   see repository
 ```
-#examples capture live dv/hdv in camera mode 
+#examples capture live dv in camera mode 
 dvgrab -noavc -f raw ~/Desktop/testcapturecamerastream.dv #captures dv files usable by dvswitch/dvpause Final Cut X/Pro/Express
 dvgrab -noavc -f raw -s 0 ~/Desktop/testcapturemaerastream.dv #captures dv 'unlimmited filesize' bigger than 1GB 
-dvgrab -noavc -g typeguidcodehere -f raw -s 0 ~/Desktop/testcapturecamerestream.dv #captures unlimited dv from specific camera
+dvgrab -noavc -g typeGUIDcodehere -f raw -s 0 ~/Desktop/testcapturecamerestream.dv #captures unlimited dv from specific camera
 
 #examples capture tape dv/hdv in recorder mode
 dvgrab -rewind #rewinds tape in 1st/all recorders 
 dvgrab -f raw -s 0 ~/Destkop/tape1-shot- #captures dv from tape from 1st recorder
 dvgrab -f raw -s 0 -a ~/Destkop/tape1-shot- #captures dv from tape with 'shot/scene detection' from 1st recorder
 dvgrab -f hdv -s 0 ~/Destkop/tape1-shot- #captures 'hdv' from tape from 1st recorder
-dvgrab -g typecameracodehere -f hdv -s 0 ~/Destkop/tape1-shot- #captures hdv from tape from specific recorder
+dvgrab -g typecameraGUIDhere -f hdv -s 0 ~/Destkop/tape1-shot- #captures hdv from tape from specific recorder
 
 #example convert movie file container type
 cat rawdvexamplefile.dv | dvgrab --stdin -noavc -s 0 -f dv2 rawdvexamplefiletype2.avi #converts raw dv to type2 avi container
@@ -142,23 +146,26 @@ dvgrab -noavc - | mplayer -nocache - #less delay than vlc?
 * dvpause (interactive playback tool with frame accurate seek to feed offline raw.dv files into dvswitch mixer) 
   https://github.com/Jeija/dvpause
 ```
-To compile on ubuntu 16.04
+#to compile on ubuntu 16.04
 sudo apt-get install libgtk-3-dev libcairo2-dev #ontop of packages to compile dvswitch!!!
 
-change "Makefile" line 7 order by putting $(FILES) before $(LIBS):
-	$(CC) $(FILES) $(LIBS) $(CFLAGS) -Wall -g -rdynamic -o main
+cd mygitprojects
+git clone https://github.com/walterav1984/dvpause
+cd dvpause
 
-#only works if dvswitch sub process dvsource-file with stdin option was installed!
-make run #Change -p port -h host in the Makefile
+make
 
 ./main | dvsource-file - -p 1234 -h 127.0.0.1
-TODO commit patches to dvpause for autogenerating playlist based on folder content!
+#only works if dvswitch sub process 'dvsource-file' with "stdin option" was installed see dvswitch!
+
+chmod +x dvpause-full-playlist.sh
+./dvpause-full-playlist.sh #edit this file for playlist item / dvswitch location!
 ```
   
 * test-dv (sent raw dv/hdv video from PC back to FireWire/iLink recorder/camcorder for tape or instance S-video/SDI/HDMI monitor)  
   https://www.kernel.org/pub/linux/libs/ieee1394/libiec61883-1.2.0.tar.gz
 ```
-To compile on ubuntu 16.04
+#to compile on ubuntu 16.04
 sudo apt-get install libraw1394-dev libiec61883-dev libdv-bin libiec61883-0
 ./configure
 make
@@ -192,5 +199,5 @@ dvsink-command -p 1234 -h 127.0.0.1 'ffmpeg -re -i pipe:0  -acodec libmp3lame  -
 TODO add examples howto
 *add overlay png/tga watermark
 *dvsink-command pipe Decklink SDI output
-*fix chroma upsameling error artifacts 420p 422p
+*fix chroma upsameling error artifacts yuv420p yuv422p
 ```
