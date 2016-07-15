@@ -174,7 +174,7 @@ cd examples
 ./test-mpeg2 filename-mpeg2hdv.mts #untested
 
 #install if all is working right!
-sudo cp .libs/test-dv /usr/local/bin #installs test-dv command to make it global available (needs libiec61883-0 installed)
+sudo cp .libs/test-dv /usr/local/bin/ #installs test-dv command to make it global available (needs libiec61883-0 installed)
 
 dvsink-command -p 1234 -h 127.0.0.1 test-dv - #dvswitch live mixer outputs stream back to iLink/FireWire recorder tape/monitor!
 ```
@@ -183,11 +183,40 @@ dvsink-command -p 1234 -h 127.0.0.1 test-dv - #dvswitch live mixer outputs strea
   see repository
 ```
 TODO add examples howto:
+*trim video in/out start stop mlt/kino?
+#http://superuser.com/questions/459313/how-to-cut-at-exact-frames-using-ffmpeg
+
+*still repeats to pal-dv?
+
+*still sequence to pal-dv?
+
 *convert any videotype to a raw DV 
-ffmpeg -i dvd_vts_example.vob -vf "fieldorder=bff" -target pal-dv output.dv #upperfield source to lowerfield dv (48Khz only)!
+ffmpeg -i dvd_vts_example.vob -vf "fieldorder=bff" -target pal-dv -aspect 16:9 output.dv #upperfield source to lowerfield dv (48Khz only)!
 
 *stream to youtube
 dvsink-command -p 1234 -h 127.0.0.1 'ffmpeg -re -i pipe:0  -acodec libmp3lame  -ar 44100 -b:a 128k -pix_fmt yuv420p -profile:v baseline -s 854x480 -bufsize 2048k -vb 1300k -maxrate 2000k -deinterlace -vcodec libx264 -preset medium -g 25 -r 25 -f flv "rtmp://a.rtmp.youtube.com/live2/yourcodehere"
+
+*speedup 23,976p / 24p to 25 pal (eliminate judder) and letterbox non standard aspect ratio to max width
+#https://ffmpeg.org/pipermail/ffmpeg-user/2013-February/013406.html (inspired by Bernd Butscheidt)
+ffmpeg -i tears_of_steel_720p.mov -vf 'scale=1024:-1,pad=1024:576:(ow-iw)/2:(oh-ih)/2',setpts='24000/25000*(PTS-STARTPTS)' -sws_flags lanczos -af asetpts='24000/25000*(PTS-STARTPTS)',aresample=48000:async=1:min_comp=0.01:comp_duration=1:max_soft_comp=100000000:min_hard_comp=0.3 -r 25 -target pal-dv -aspect 16:9 dvtearsasetptswide.dv
+#quick/dirty speedup audio out of sync possible depending on source?
+ffmpeg -r 25 -i sintel-1280-surround.mp4 -vf 'scale=1024:-1,pad=1024:576:(ow-iw)/2:(oh-ih)/2' -sws_flags lanczos -af atempo=1.04166666667 -r 25 -target pal-dv -aspect 16:9 dvsint.dv 
+
+*720p50/1920p50 to pal-dv
+#https://forum.kde.org/viewtopic.php?f=272&t=129152
+ffmpeg -i source -flags +ildct+ilme -vf interlace=lowpass=1:scan=bff #test (Inapickle post#3)
+ffmpeg -i source -vf "tinterlace=5:flags=vlpf" #test (Inapickle post#3)
+#http://forum.videohelp.com/threads/357744-Encoding-interlaced-with-Mencoder-or-ffmpeg 
+ffmpeg -i 50p_input.avi -aspect 16:9 -vf scale=720:576,colormatrix=bt709:bt601,interlace #test ( poisondeathray post#6)
+#https://ffmpeg.org/pipermail/ffmpeg-user/2014-March/020589.html #see next mpv
+#https://ffmpeg.org/pipermail/ffmpeg-user/2012-January/004485.html
+
+*1920p25 to pal-dv
+
+*1920i50/1920i25 to pal-dv
+ffmpeg -i input.mts -aspect 16:9 -vf scale=720:576:interl=1,colormatrix=bt709:bt601 #test ( poisondeathray post#6)
+
+*other 29.976/30 59/60 ntsc based material to pal-dv
 
 ```
 
