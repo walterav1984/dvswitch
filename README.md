@@ -187,6 +187,7 @@ TODO add examples howto:
 #http://superuser.com/questions/459313/how-to-cut-at-exact-frames-using-ffmpeg
 
 *still repeats to pal-dv?
+ffmpeg -loop 1 -i still.jpg -shortest -target pal-dv still.dv #?
 
 *still sequence to pal-dv?
 
@@ -226,7 +227,15 @@ ffmpeg -i input.mts -aspect 16:9 -vf scale=720:576:interl=1,colormatrix=bt709:bt
   https://www.mltframework.org/
 ```
 TODO add examples howto
-*add overlay png/tga watermark
-*dvsink-command pipe Decklink SDI output
-*fix chroma upsameling error artifacts yuv420p yuv422p
+**dvsink-command pipe Decklink SDI outpu add overlay png/tga watermark
+dvsink-command -p 1234 -h 127.0.0.1 dv2melt-logo-sdi-script.sh 
+dv2melt-logo-sdi-script.sh #contents below
+melt -profile dv_pal_wide pipe: -consumer decklink -filter watermark:~/logo-anamorph.png distort=1
+
+*fix chroma upsameling error interlaced artifacts yuv420p > yuv422p files only...
+ffmpeg -i example420interlaced.dv -vf scale=interl=1 -vcodec prores -profile:v 2 output.mov #correclty upscales mpeg2/dv to 10bit 422 yuv interlaced proress for playback in melt to declink sd
+melt -profile dv_pal_wide examplevideo.dv -filter swscale:interl=1 #melt equevalent of chroma upscaling error??? error Cannot allocate memory.
+
+*melt firewire input specify dvguid option?
+melt iec61883:auto #works only with single firewire device per firewire card auto is firewire card number
 ```
