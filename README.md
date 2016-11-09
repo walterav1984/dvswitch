@@ -44,7 +44,11 @@ sudo make install #dvswitch gets installed with icons and related sub process to
 Grabbing DV video signals with "dvgrab" or using "dvswitch" normally works for modern DV devices which get added to the video/audio USER GROUP automatically by udev without sudo permissions, but some "ancient" DV camera's are not recognized by the udev rules since 16.04!
 
 ```
-#compare permisions of working "modern" dv devices with "ancient" dv devices
+#quick&dirty autopatch
+sudo sed -i 's/0x010001/0x01000/g' /lib/udev/rules.d/50-udev-default.rules
+sudo sed -i 's/0x010001/0x01000/g' /lib/udev/rules.d/70-uaccess.rules
+
+#manual readon compare permisions of working "modern" dv devices with "ancient" dv devices
 ls -la /dev/fw*
 getfacl /dev/fw*
 cat /sys/bus/firewire/devices/fw1/* #shows more firewire info like ATTR
@@ -81,7 +85,7 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 - [x] ~~myself remove sources from settings menu~~
 - [x] ~~myself change GUI naming to match keyboard shortcut keys!~~
 - [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
-- [ ] myself ?                                                                              #limit warning/error message flood console
+- [x ] ~~myself ?                                                                              #limit warning/error message flood console~~
 - [ ] myself complete dvsource-file patch with manual/doc by CarlFK. 
 - [ ] Why dvsource-file '-n' parameter has worse performance than dirty tee pipe script contact CarlFK.?
 - [ ] Write user friendly instruction/step/debug plan instead of minimal steps for developers.
