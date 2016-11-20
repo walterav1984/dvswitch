@@ -13,8 +13,8 @@ Based on ubuntu 16.04 mini.iso install with tasksel "standard system utilities +
 
 ```
 sudo apt-get install dvgrab ffmpeg cmake build-essential libboost-thread-dev libgtkmm-2.4-dev libavcodec-dev libavutil-dev libasound2-dev libxv-dev libjack-jackd2-dev liblo-dev git
-mkdir mygitprojects
-cd mygitprojects
+mkdir ~/mygitprojects
+cd ~/mygitprojects
 git clone https://github.com/walterav1984/dvswitch.git
 mkdir -p mybuilds/dvswitch/build1
 cd mybuilds/dvswitch/build1
@@ -36,8 +36,9 @@ sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/
 
 ./dvsink-files -p 1234 -h 127.0.0.1 ~/Desktop/recordmixeroutput.dv #Sub Process records the output of dvswitch(when record is pressed)!
 
-#when all parts behave fine do 
-sudo make install #dvswitch gets installed with icons and related sub process tools and can be run global!
+#when all parts behave fine do
+cd ~/mygitprojects/mybuilds/dvswitch/build1
+sudo make install #dvswitch gets installed with icons and related sub process tools and can be run global from shell!
 ```
 ###Fix ubuntu 16.04 firewire sudo permissions /dev/fw* for "ancient" DV devices
 
@@ -85,7 +86,7 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 - [x] ~~myself remove sources from settings menu~~
 - [x] ~~myself change GUI naming to match keyboard shortcut keys!~~
 - [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
-- [x ] ~~myself ?                                                                              #limit warning/error message flood console~~
+- [x ] ~~myself ?~~                                                                         #limit warning/error message flood console
 - [ ] myself complete dvsource-file patch with manual/doc by CarlFK. 
 - [ ] Why dvsource-file '-n' parameter has worse performance than dirty tee pipe script contact CarlFK.?
 - [ ] Write user friendly instruction/step/debug plan instead of minimal steps for developers.
