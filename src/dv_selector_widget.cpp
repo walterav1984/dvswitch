@@ -15,11 +15,10 @@
 
 namespace
 {
-    const unsigned thumbs_per_row = 4;
+    const unsigned thumbs_per_row = 5;
     enum {
 	column_labels,
 	column_display,
-	column_separator,
 	column_multiplier
     };
     enum {
@@ -115,7 +114,7 @@ void dv_selector_widget::set_source_count(unsigned count)
 
 		char label_text[5];
 		snprintf(label_text, sizeof(label_text),
-			 (i < 9) ? "_%u _" : "%u _", unsigned(1 + i));
+			 (i < 10) ? "_%u _" : "%u _", unsigned(0 + i));
 		Gtk::Label * label =
 		    manage(new Gtk::Label(label_text, true));
 		label->show();
@@ -175,14 +174,14 @@ void dv_selector_widget::set_source_count(unsigned count)
 		       0, 0);
 		snd_btn_[i] = audio_button;
 
-		if (i < 9)
+		if (i < 10)
 		{
 		    // Make the mnemonic on the label work.  Also make
 		    // the numeric keypad and Alt-keys work.
 		    label->set_mnemonic_widget(*pri_video_button);
 		    pri_video_button->add_accelerator("activate",
 						  accel_group_,
-						  GDK_KP_1 + i,
+						  GDK_KP_0 + i,
 						  Gdk::ModifierType(0),
 						  Gtk::AccelFlags(0));
 		    pri_video_button->signal_activate().connect(
@@ -193,12 +192,12 @@ void dv_selector_widget::set_source_count(unsigned count)
 			    i));
 		    sec_video_button->add_accelerator("activate",
 						      accel_group_,
-						      '1' + i,
+						      '0' + i,
 						      Gdk::CONTROL_MASK,
 						      Gtk::AccelFlags(0));
 		    sec_video_button->add_accelerator("activate",
 						      accel_group_,
-						      GDK_KP_1 + i,
+						      GDK_KP_0 + i,
 						      Gdk::CONTROL_MASK,
 						      Gtk::AccelFlags(0));
 		    sec_video_button->signal_activate().connect(
@@ -209,12 +208,12 @@ void dv_selector_widget::set_source_count(unsigned count)
 			    i));
 		    audio_button->add_accelerator("activate",
 						  accel_group_,
-						  '1' + i,
+						  '0' + i,
 						  Gdk::MOD1_MASK,
 						  Gtk::AccelFlags(0));
 		    audio_button->add_accelerator("activate",
 						  accel_group_,
-						  GDK_KP_1 + i,
+						  GDK_KP_0 + i,
 						  Gdk::MOD1_MASK,
 						  Gtk::AccelFlags(0));
 		    audio_button->signal_activate().connect(

@@ -34,7 +34,7 @@ namespace
 	return (numer + denom / 2) / denom;
     }
 
-    const unsigned thumb_scale_denom = 4;
+    const unsigned thumb_scale_denom = 5;
 
     const uint32_t invalid_xv_port = uint32_t(-1);
 
@@ -761,7 +761,7 @@ void dv_display_widget::on_unrealize() throw()
 // dv_thumb_display_widget
 
 dv_thumb_display_widget::dv_thumb_display_widget(sigc::signal1<void, unsigned>*sel, unsigned source_id)
-    : dv_display_widget(/*scale=*/4),
+    : dv_display_widget(/*scale=*/3),
       source_id_(source_id),
       pri_selector_(sel),
       error_pixbuf_(load_icon("gtk-dialog-warning", 64)),
