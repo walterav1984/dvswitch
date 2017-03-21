@@ -27,6 +27,7 @@
 static struct option options[] = {
     {"host",   1, NULL, 'h'},
     {"port",   1, NULL, 'p'},
+    {"tally",  0, NULL, 'a'},
     {"loop",   0, NULL, 'l'},
     {"help",   0, NULL, 'H'},
     {"timings",0, NULL, 't'},
@@ -35,6 +36,7 @@ static struct option options[] = {
 
 static char * mixer_host = NULL;
 static char * mixer_port = NULL;
+static int do_tally = 0;
 
 static void handle_config(const char * name, const char * value)
 {
@@ -65,7 +67,7 @@ static void usage(const char * progname)
 {
     fprintf(stderr,
 	    "\
-Usage: %s [-h HOST] [-p PORT] [-l] [-t] FILE\n",
+Usage: %s [-h HOST] [-p PORT] [-a] [-l] [-t] FILE\n",
 	    progname);
 }
 
@@ -225,6 +227,30 @@ static int is_dv_file(int fd)
     return is_dv;
 }
 
+static void tally(struct transfer_params * params)
+{
+    // Messages should never be buffered
+    setbuf(stdout, NULL);
+    
+    for (;;)
+    {
+	char act_msg[ACT_MSG_SIZE];
+	ssize_t read_size = read_retry(params->sock, act_msg, ACT_MSG_SIZE);
+	if (read_size < ACT_MSG_SIZE)
+	{
+	    if (read_size < 0)
+		perror("ERROR: wtf read");
+	    break;
+	}
+
+	if (act_msg[ACT_MSG_VIDEO_POS])
+	    printf("TALLY: on\n");
+	else
+	    printf("TALLY: off\n");
+    }
+
+}
+
 int main(int argc, char ** argv)
 {
     /* Initialise settings from configuration files. */
@@ -237,7 +263,7 @@ int main(int argc, char ** argv)
     /* Parse arguments. */
 
     int opt;
-    while ((opt = getopt_long(argc, argv, "h:p:lt", options, NULL)) != -1)
+    while ((opt = getopt_long(argc, argv, "h:p:alt", options, NULL)) != -1)
     {
 	switch (opt)
 	{
@@ -248,6 +274,9 @@ int main(int argc, char ** argv)
 	case 'p':
 	    free(mixer_port);
 	    mixer_port = strdup(optarg);
+	    break;
+	case 'a':
+	    do_tally = 1;
 	    break;
 	case 'l':
 	    params.opt_loop = true;
@@ -312,12 +341,30 @@ int main(int argc, char ** argv)
     printf("INFO: Connecting to %s:%s\n", mixer_host, mixer_port);
     params.sock = create_connected_socket(mixer_host, mixer_port);
     assert(params.sock >= 0); /* create_connected_socket() should handle errors */
-    if (write(params.sock, GREETING_SOURCE, GREETING_SIZE) != GREETING_SIZE)
+    if (write(params.sock, do_tally ? GREETING_ACT_SOURCE : GREETING_SOURCE, 
+		GREETING_SIZE) != GREETING_SIZE)
     {
 	perror("ERROR: write");
 	exit(1);
     }
     printf("INFO: Connected.\n");
+
+    if (do_tally)
+    {
+	fflush(NULL);
+	int child_pid = fork();
+
+	if (child_pid < 0)
+	{
+	    perror("ERROR: fork");
+	    return 1;
+	}
+	if (child_pid == 0)
+	{
+	    tally(&params);
+	    _exit(0);
+	}
+    }
 
     transfer_frames(&params);
 
