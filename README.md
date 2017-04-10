@@ -1,4 +1,4 @@
-Warning This Page/Project is evolving, things can break/change/damage without notice!
+Warning This Page/Project is evolving, things can break/change/damage without notice during each commit!
 
 #dvswitch
 * live PAL/NTSC VideoMixer (network orientated) for DV file(s)/stream(s) originating from local FireWire/iLink devices like camera's, recorders or even remote ones on the network/internet.
@@ -9,36 +9,44 @@ Warning This Page/Project is evolving, things can break/change/damage without no
 
 ##Compile and Run on ubuntu 16.04
 
-Based on ubuntu 16.04 mini.iso install with tasksel "standard system utilities + Ubuntu MATE minimal installation + OpenSSH-server":
+Based on ubuntu 16.04 'mini.iso' install with tasksel options "standard system utilities + Ubuntu MATE minimal installation + OpenSSH-server" the following instructions should let you "compile" and "run" dvswitch:
 
 ```
+#get the neccesary tools to compile and run dvswitch
 sudo apt-get install dvgrab ffmpeg cmake build-essential libboost-thread-dev libgtkmm-2.4-dev libavcodec-dev libavutil-dev libasound2-dev libxv-dev libjack-jackd2-dev liblo-dev git
+#create folder to get sourcecode for dvswitch
 mkdir ~/mygitprojects
 cd ~/mygitprojects
+#get dvswitch sourcecode
 git clone https://github.com/walterav1984/dvswitch.git
+#create folder to compile dvswitch
 mkdir -p mybuilds/dvswitch/build1
+#prepare compiling dvswitch in current folder
 cd mybuilds/dvswitch/build1
 cmake ../../../dvswitch
+#compile dvswitch
 make
-cd src
-./dvswitch -p 1234 -h 127.0.0.1 #see error missing icons!
-sudo mkdir /usr/local/share/dvswitch
-sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/
-./dvswitch -p 1234 -h 127.0.0.1 #Main Process
 
-./dvsource-dvgrab --firewire -p 1234 -h 127.0.0.1 #Sub Process connects 'some/single' DV iLink/FireWire to dvswitch
-./dvsource-dvgrab --firewire -g typeGUIDcodehere -p 1234 -h 127.0.0.1 #Sub Process connects specific DV device to dvswitch
+#test dvswitch or its subcommands located in the src folder
+cd src
+./dvswitch -p 1234 -h 127.0.0.1 #probably won't start see error missing icons!
+sudo mkdir /usr/local/share/dvswitch
+sudo cp ~/mygitprojects/dvswitch/data/*.png /usr/local/share/dvswitch/ #install missing icons!
+./dvswitch -p 1234 -h 127.0.0.1 #starts the actual GUI based dvmixer 
+
+./dvsource-dvgrab --firewire -p 1234 -h 127.0.0.1 #subcommand connects 'some/single' DV iLink/FireWire to dvswitch
+./dvsource-dvgrab --firewire -g typeGUIDcodehere -p 1234 -h 127.0.0.1 #subcommand connects specific DV device to dvswitch
 
 #What is typeGUIDcodehere? DV devices have unique codes that help identify same type/models so you can choose a specific
 #camera to be the first or the third device in your video mixer. To find GUID codes, use terminal and type:dmesg | grep "GUID"
 
-./dvsource-file -p 1234 -h 127.0.0.1 -l  ~/mygitprojects/dvswitch/tests/test1.dv #Sub Process -l loops file for continues playback in dvswitch 
+./dvsource-file -p 1234 -h 127.0.0.1 -l  ~/mygitprojects/dvswitch/tests/test1.dv #subcommand -l loops file for continues playback in dvswitch 
 
-./dvsink-files -p 1234 -h 127.0.0.1 ~/Desktop/recordmixeroutput.dv #Sub Process records the output of dvswitch(when record is pressed)!
+./dvsink-files -p 1234 -h 127.0.0.1 ~/Desktop/recordmixeroutput.dv #subcommand records the output of dvswitch(when record is pressed)!
 
-#when all parts behave fine do
+#when dvswitch and it subcommands behave fine you can install it
 cd ~/mygitprojects/mybuilds/dvswitch/build1
-sudo make install #dvswitch gets installed with icons and related sub process tools and can be run global from shell!
+sudo make install #dvswitch gets installed with icons and related subcommands tools and can be run global from shell!
 ```
 ###Fix ubuntu 16.04 firewire sudo permissions /dev/fw* for "ancient" DV devices
 
@@ -85,15 +93,24 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 - [x] ~~https://github.com/yoe/dvswitch/commit/26d1c37a90a64362fe4afa08057331ba10c06eb0	    #highres color thumbnails~~
 - [x] ~~myself remove sources from settings menu~~
 - [x] ~~myself change GUI naming to match keyboard shortcut keys!~~
-- [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
-- [x ] ~~myself ?~~                                                                         #limit warning/error message flood console
-- [ ] myself complete dvsource-file patch with manual/doc by CarlFK. 
+- [x] ~~myself ?                                                                        #limit warning/error message flood console~~
+- [ ] complete dvsource-file patch with updating manual/doc by CarlFK. 
 - [ ] Why dvsource-file '-n' parameter has worse performance than dirty tee pipe script contact CarlFK.?
-- [ ] Write user friendly instruction/step/debug plan instead of minimal steps for developers.
+- [ ] Rename "dvsource/dvsink" to resemble naming conventions used in other broadcast applications "producer/consumer"
+- [ ] Describe howto compile and use dvsink&dvsource on Windows7-8.1 using cygwin or even use dvswitch(blind) in W10 W.S.L.
+- [ ] Describe howto compile dvsink using brew/xcode on osx 10.6-10.11
+- [ ] https://github.com/jnweiger/dvswitch/commit/0d6e549b26f81096038f703000316605f51e5b67  #title safe area activated by flag
+- [ ] https://github.com/voc/dvswitch-voc/commit/8f004cc7d84b858d4bdd361e7c5a7cae6ae314ca #pip size-position set by flag
+- [ ] Write user friendly instruction/step/debug plan instead of minimal steps for developers, cleanup this README make WIKI.
 
 ##TODO hard?
+- [ ] (re)start fileplayback of dvsource-file when source is selected in the dvswitch mixer (respond on taly activation) 
+- [ ] Reorder GUI dvselector buttons (Label/A/B/Audio) horizontal in columns above thumb instead of rows beside thumb.  
+- [ ] Compile OSX dvsource-file needs machtiming patch/rewrite timert (OSX Sierra timert still not sufficient)
 - [ ] automate/link "dvpause project" start/play button with source selection (keyboard press) in dvswitch?
-- [ ] integrate watermark/tga/png overlay (multiple slots) or use MLT at the end? 
+- [x] ~~composite transparant static or animating CGI/Logo~~ #mlt can composite anything ontop of dvsink output incl. CasparCG
+- [ ] write native dvsink-producers for MLT-framework/CasparCG-server/obs-studio based on dvswitch-command to stream dvswitch out
+- [ ] changelog / version update official build?
 
 * example scripts of all great dv/firewire related tools / pipe-constructions
 ```
@@ -231,15 +248,12 @@ ffmpeg -i input.mts -aspect 16:9 -vf scale=720:576:interl=1,colormatrix=bt709:bt
   or "shotcut" for newest included melt builds https://www.shotcut.org/
   https://www.mltframework.org/
 ```
-TODO add examples howto
-**dvsink-command pipe Decklink SDI outpu add overlay png/tga watermark
+*dvsink-command pipe Decklink SDI output add overlay png/tga watermark
 dvsink-command -p 1234 -h 127.0.0.1 dv2melt-logo-sdi-script.sh 
-dv2melt-logo-sdi-script.sh #contents below
+'dv2melt-logo-sdi-script.sh' #contents below
 melt -profile dv_pal_wide pipe: -consumer decklink -filter watermark:~/logo-anamorph.png distort=1
 
-*fix chroma upsameling error interlaced artifacts yuv420p > yuv422p files only...
-ffmpeg -i example420interlaced.dv -vf scale=interl=1 -vcodec prores -profile:v 2 output.mov #correclty upscales mpeg2/dv to 10bit 422 yuv interlaced proress for playback in melt to declink sd
-melt -profile dv_pal_wide examplevideo.dv -filter swscale:interl=1 #melt equevalent of chroma upscaling error??? error Cannot allocate memory.
+*mlt DV chroma upsameling error interlacing artifacts yuv420p > yuv422p fixed https://github.com/mltframework/mlt/issues/172
 
 *melt firewire input specify dvguid option?
 melt iec61883:auto #works only with single firewire device per firewire card auto is firewire card number
