@@ -114,8 +114,9 @@ sudo nano /etc/init.d/ondemand #replace GOVERNOR="ondemand/performance/interacti
 
 * example scripts of all great dv/firewire related tools / pipe-constructions
 ```
-#mixer output of 1st dvswitch as a source to 2nd dvswitch mixer input
-dvsink-command -p 1234 -h 127.0.0.1 'dvsource-file - -p remoteport -h remotehost' 
+#mixer output of local dvswitch as a source to a remote dvswitch mixer input 
+#depending on network topology Routing/NAT this command can be initiated local or remote
+dvsink-command -p 1234 -h 192.168.2.222 dvsource-file -- - -p 1235 -h 192.168.1.111
 
 #record individual sources instead of dvswitch single mix output!
 dvgrab -noavc -g typeGUIDcamera1 - | tee >(dvsource-dvgrab --firewire - -p 1234 -h 127.0.0.1) >(~/Desktop/camera1fileoutput.dv) > /dev/null
