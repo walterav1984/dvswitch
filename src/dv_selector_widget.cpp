@@ -170,11 +170,6 @@ void dv_selector_widget::set_source_count(unsigned count)
 		    // Make the mnemonic on the label work.  Also make
 		    // the numeric keypad and Alt-keys work.
 		    label->set_mnemonic_widget(*pri_video_button);
-		    pri_video_button->add_accelerator("activate",
-						  accel_group_,
-						  GDK_KP_0 + i,
-						  Gdk::ModifierType(0),
-						  Gtk::AccelFlags(0));
 		    pri_video_button->signal_activate().connect(
 			sigc::bind(
 			    sigc::mem_fun(
@@ -186,11 +181,6 @@ void dv_selector_widget::set_source_count(unsigned count)
 						      '0' + i,
 						      Gdk::CONTROL_MASK,
 						      Gtk::AccelFlags(0));
-		    sec_video_button->add_accelerator("activate",
-						      accel_group_,
-						      GDK_KP_0 + i,
-						      Gdk::CONTROL_MASK,
-						      Gtk::AccelFlags(0));
 		    sec_video_button->signal_activate().connect(
 			sigc::bind(
 			    sigc::mem_fun(
@@ -199,12 +189,12 @@ void dv_selector_widget::set_source_count(unsigned count)
 			    i));
 		    audio_button->add_accelerator("activate",
 						  accel_group_,
-						  '0' + i,
-						  Gdk::MOD1_MASK,
+						  GDK_KP_0 + i,
+						  Gdk::ModifierType(0),
 						  Gtk::AccelFlags(0));
 		    audio_button->add_accelerator("activate",
 						  accel_group_,
-						  GDK_KP_0 + i,
+						  '0' + i,
 						  Gdk::MOD1_MASK,
 						  Gtk::AccelFlags(0));
 		    audio_button->signal_activate().connect(
