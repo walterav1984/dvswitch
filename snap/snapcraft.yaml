@@ -9,3 +9,4 @@ confinement: devmode
 parts:
   dvswitch-part:
     plugin: cmake
+    build-packages: libboost-thread-dev libgtkmm-2.4-dev libavcodec-dev libasound2-dev libxv-dev libjack-jackd2-dev liblo-dev
