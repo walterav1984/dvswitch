@@ -2,6 +2,7 @@ name: dvswitch
 version: '0.9.5'
 summary: live PAL/NTSC DV VideoMixer (network orientated) using FireWire 1394
 description: dvswitch is a simple GUI DV VideoMixer assisted/initiated by CLI tools dvsource/dvsink
+type: app
 
 grade: devel
 confinement: devmode
@@ -11,3 +12,19 @@ parts:
     plugin: cmake
     build-packages: [libboost-thread-dev,libgtkmm-2.4-dev,libavcodec-dev,libasound2-dev,libxv-dev,libjack-jackd2-dev,liblo-dev,gettext,]
     stage-packages: [libpng12-0,dvgrab]
+#   organize:
+#     usr/local/share/: usr/share/
+
+apps:
+  dvgrab:
+    command: usr/bin/dvgrab
+  dvswitch:
+    command: usr/local/bin/dvswitch
+  dvsink-files:
+    command: usr/local/bin/dvsink-files
+  dvsource-file:
+    command: usr/local/bin/dvsource-file
+  dvsource-dvgrab:
+    command: usr/local/bin/dvsource-dvgrab
+  dvsource-firewire:
+    command: usr/local/bin/dvsource-firewire
