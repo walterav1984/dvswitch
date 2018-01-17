@@ -9,9 +9,10 @@ confinement: devmode
 
 parts:
   dvswitch-part:
+    after: [desktop-gtk2]
     plugin: cmake
     build-packages: [libboost-thread-dev,libgtkmm-2.4-dev,libavcodec-dev,libasound2-dev,libxv-dev,libjack-jackd2-dev,liblo-dev,gettext,]
-    stage-packages: [libpng12-0,dvgrab]
+    stage-packages: [libpng12-0,dvgrab,libgdk-pixbuf2.0-0]
 #   organize:
 #     usr/local/share/: usr/share/
 
@@ -19,7 +20,8 @@ apps:
   dvgrab:
     command: usr/bin/dvgrab
   dvswitch:
-    command: usr/local/bin/dvswitch
+    command: desktop-launch $SNAP/usr/local/bin/dvswitch
+    plugs: [x11,wayland,network,network-bind,home,desktop,desktop-legacy]
   dvsink-files:
     command: usr/local/bin/dvsink-files
   dvsource-file:
