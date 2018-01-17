@@ -32,13 +32,11 @@ namespace
 
 dv_selector_widget::dv_selector_widget()
     : pri_video_source_pixbuf_(
-	  Gdk::Pixbuf::create_from_file(SHAREDIR
-					"/dvswitch/pri-video-source.png")),
+	  Gdk::Pixbuf::create_from_file("/snap/dvswitch/current/usr/local/share/dvswitch/pri-video-source.png")),
       sec_video_source_pixbuf_(
-	  Gdk::Pixbuf::create_from_file(SHAREDIR
-					"/dvswitch/sec-video-source.png")),
+	  Gdk::Pixbuf::create_from_file("/snap/dvswitch/current/usr/local/share/dvswitch/sec-video-source.png")),
       audio_source_pixbuf_(
-	  Gdk::Pixbuf::create_from_file(SHAREDIR "/dvswitch/audio-source.png"))
+	  Gdk::Pixbuf::create_from_file("/snap/dvswitch/current/usr/local/share/dvswitch/audio-source.png"))
 {
     set_col_spacings(gui_standard_spacing);
     set_row_spacings(gui_standard_spacing);
