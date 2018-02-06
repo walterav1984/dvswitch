@@ -56,7 +56,7 @@ CHECK_SYMBOL_EXISTS("av_frame_alloc" "<avcodec.h>" AVC_HAVE_FRAME_ALLOC)
 # Cope with recent move of ffmpeg headers into subdirectories
 set(LIBAVCODEC_INCLUDE_DIRS ${LIBAVCODEC_INCLUDE_DIRS} ${LIBAVCODEC_INCLUDEDIR}/libavcodec)
 
-set(prefix /usr/local
+set(prefix /usr
     CACHE PATH "Installation prefix")
 set(bindir ${prefix}/bin
     CACHE PATH "Executable installation directory")
