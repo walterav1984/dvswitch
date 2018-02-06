@@ -5,14 +5,14 @@ description: dvswitch is a simple GUI DV VideoMixer assisted/initiated by CLI to
 type: app
 
 grade: devel
-confinement: devmode
+confinement: classic
 
 parts:
   dvswitch-part:
     after: [desktop-gtk2]
     plugin: cmake
     build-packages: [libboost-thread-dev,libgtkmm-2.4-dev,libavcodec-dev,libasound2-dev,libxv-dev,libjack-jackd2-dev,liblo-dev,gettext,]
-    stage-packages: [libpng12-0,dvgrab,libgdk-pixbuf2.0-0]
+    stage-packages: [libpng12-0,dvgrab,libgdk-pixbuf2.0-0,hicolor-icon-theme]
 #   organize:
 #     usr/local/share/: usr/share/
 
@@ -20,13 +20,13 @@ apps:
   dvgrab:
     command: usr/bin/dvgrab
   dvswitch:
-    command: desktop-launch $SNAP/usr/local/bin/dvswitch
+    command: bin/desktop-launch $SNAP/usr/bin/dvswitch
     plugs: [x11,wayland,network,network-bind,home,desktop,desktop-legacy]
   dvsink-files:
-    command: usr/local/bin/dvsink-files
+    command: usr/bin/dvsink-files
   dvsource-file:
-    command: usr/local/bin/dvsource-file
+    command: usr/bin/dvsource-file
   dvsource-dvgrab:
-    command: usr/local/bin/dvsource-dvgrab
+    command: usr/bin/dvsource-dvgrab
   dvsource-firewire:
-    command: usr/local/bin/dvsource-firewire
+    command: usr/bin/dvsource-firewire
